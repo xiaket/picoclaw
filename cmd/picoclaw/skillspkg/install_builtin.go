@@ -86,28 +86,7 @@ func copyDirectory(src, dst string) error {
 		}
 		defer dstFile.Close()
 
-		_, err = fmtCopy(dstFile, srcFile)
+		_, err = io.Copy(dstFile, srcFile)
 		return err
 	})
-}
-
-func fmtCopy(dst *os.File, src *os.File) (int64, error) {
-	buf := make([]byte, 32*1024)
-	var written int64
-	for {
-		n, err := src.Read(buf)
-		if n > 0 {
-			wn, err := dst.Write(buf[:n])
-			if err != nil {
-				return written, err
-			}
-			written += int64(wn)
-		}
-		if err != nil {
-			if err == io.EOF {
-				return written, nil
-			}
-			return written, err
-		}
-	}
 }

@@ -34,7 +34,7 @@ func logoutImpl() {
 			os.Exit(1)
 		}
 
-		appCfg, err := loadConfig()
+		appCfg, err := config.LoadConfig(configPath)
 		if err == nil {
 			switch logoutProvider {
 			case "openai":
@@ -42,7 +42,7 @@ func logoutImpl() {
 			case "anthropic":
 				appCfg.Providers.Anthropic.AuthMethod = ""
 			}
-			config.SaveConfig(getConfigPath(), appCfg)
+			config.SaveConfig(configPath, appCfg)
 		}
 
 		fmt.Printf("Logged out from %s\n", logoutProvider)
@@ -52,11 +52,11 @@ func logoutImpl() {
 			os.Exit(1)
 		}
 
-		appCfg, err := loadConfig()
+		appCfg, err := config.LoadConfig(configPath)
 		if err == nil {
 			appCfg.Providers.OpenAI.AuthMethod = ""
 			appCfg.Providers.Anthropic.AuthMethod = ""
-			config.SaveConfig(getConfigPath(), appCfg)
+			config.SaveConfig(configPath, appCfg)
 		}
 
 		fmt.Println("Logged out from all providers")

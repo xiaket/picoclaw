@@ -11,10 +11,11 @@ import (
 )
 
 var RemoveCmd = &cobra.Command{
-	Use:   "remove <name>",
-	Short: "Remove installed skill",
-	Long:  `Remove an installed skill by name.`,
-	Args:  cobra.ExactArgs(1),
+	Use:     "remove <name>",
+	Aliases: []string{"uninstall"},
+	Short:   "Remove installed skill",
+	Long:    `Remove an installed skill by name.`,
+	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		removeImpl(args[0])
 	},

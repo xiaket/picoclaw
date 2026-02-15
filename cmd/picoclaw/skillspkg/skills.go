@@ -4,8 +4,6 @@
 package skillspkg
 
 import (
-	"path/filepath"
-
 	"github.com/sipeed/picoclaw/pkg/skills"
 )
 
@@ -37,5 +35,5 @@ func getWorkspace() string {
 }
 
 func getBuiltinSkillsDir() string {
-	return filepath.Join(workspace, "../picoclaw/skills")
+	return builtinSkillsDir
 }

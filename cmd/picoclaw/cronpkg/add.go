@@ -46,7 +46,7 @@ func init() {
 	AddCmd.Flags().StringVarP(&cronName, "name", "n", "", "Job name (required)")
 	AddCmd.Flags().StringVarP(&cronMessage, "message", "m", "", "Message for agent (required)")
 	AddCmd.Flags().StringVarP(&cronCronExpr, "cron", "c", "", "Cron expression (e.g. '0 9 * * *')")
-	AddCmd.Flags().StringVarP(&cronTo, "to", "", "", "Recipient for delivery")
+	AddCmd.Flags().StringVar(&cronTo, "to", "", "Recipient for delivery")
 	AddCmd.Flags().StringVar(&cronChannel, "channel", "", "Channel for delivery")
 	AddCmd.Flags().Int64VarP(&cronEvery, "every", "e", 0, "Run every N seconds")
 	AddCmd.Flags().BoolVarP(&cronDeliver, "deliver", "d", false, "Deliver response to channel")

@@ -37,15 +37,6 @@ func init() {
 	LoginCmd.Flags().BoolVar(&loginDeviceCode, "device-code", false, "Use device code flow (for headless environments)")
 }
 
-func getConfigPath() string {
-	home, _ := os.UserHomeDir()
-	return fmt.Sprintf("%s/.picoclaw/config.json", home)
-}
-
-func loadConfig() (*config.Config, error) {
-	return config.LoadConfig(getConfigPath())
-}
-
 func loginImpl() {
 	switch loginProvider {
 	case "openai":
@@ -81,10 +72,10 @@ func loginOpenAI(useDeviceCode bool) {
 		os.Exit(1)
 	}
 
-	appCfg, err := loadConfig()
+	appCfg, err := config.LoadConfig(configPath)
 	if err == nil {
 		appCfg.Providers.OpenAI.AuthMethod = "oauth"
-		if err := config.SaveConfig(getConfigPath(), appCfg); err != nil {
+		if err := config.SaveConfig(configPath, appCfg); err != nil {
 			fmt.Printf("Warning: could not update config: %v\n", err)
 		}
 	}
@@ -107,7 +98,7 @@ func loginPasteToken(provider string) {
 		os.Exit(1)
 	}
 
-	appCfg, err := loadConfig()
+	appCfg, err := config.LoadConfig(configPath)
 	if err == nil {
 		switch provider {
 		case "anthropic":
@@ -115,7 +106,7 @@ func loginPasteToken(provider string) {
 		case "openai":
 			appCfg.Providers.OpenAI.AuthMethod = "token"
 		}
-		if err := config.SaveConfig(getConfigPath(), appCfg); err != nil {
+		if err := config.SaveConfig(configPath, appCfg); err != nil {
 			fmt.Printf("Warning: could not update config: %v\n", err)
 		}
 	}

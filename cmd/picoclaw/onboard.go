@@ -6,7 +6,6 @@ package main
 import (
 	"embed"
 	"fmt"
-	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -55,61 +54,6 @@ func onboard() {
 	fmt.Println("  1. Add your API key to", configPath)
 	fmt.Println("     Get one at: https://openrouter.ai/keys")
 	fmt.Println("  2. Chat: picoclaw agent -m \"Hello!\"")
-}
-
-func copyDirectory(src, dst string) error {
-	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		relPath, err := filepath.Rel(src, path)
-		if err != nil {
-			return err
-		}
-
-		dstPath := filepath.Join(dst, relPath)
-
-		if info.IsDir() {
-			return os.MkdirAll(dstPath, info.Mode())
-		}
-
-		srcFile, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer srcFile.Close()
-
-		dstFile, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, info.Mode())
-		if err != nil {
-			return err
-		}
-		defer dstFile.Close()
-
-		_, err = fmtCopy(dstFile, srcFile)
-		return err
-	})
-}
-
-func fmtCopy(dst *os.File, src *os.File) (int64, error) {
-	buf := make([]byte, 32*1024)
-	var written int64
-	for {
-		n, err := src.Read(buf)
-		if n > 0 {
-			wn, err := dst.Write(buf[:n])
-			if err != nil {
-				return written, err
-			}
-			written += int64(wn)
-		}
-		if err != nil {
-			if err == io.EOF {
-				return written, nil
-			}
-			return written, err
-		}
-	}
 }
 
 func copyEmbeddedToTarget(targetDir string) error {

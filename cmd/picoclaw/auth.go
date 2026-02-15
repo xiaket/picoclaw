@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/sipeed/picoclaw/cmd/picoclaw/auth"
+	authpkg "github.com/sipeed/picoclaw/cmd/picoclaw/auth"
 	"github.com/spf13/cobra"
 )
 
@@ -20,9 +20,13 @@ var authCmd = &cobra.Command{
 }
 
 func init() {
-	authCmd.AddCommand(auth.LoginCmd)
-	authCmd.AddCommand(auth.LogoutCmd)
-	authCmd.AddCommand(auth.StatusCmd)
+	authCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+		authpkg.SetConfigPath(getConfigPath())
+	}
+
+	authCmd.AddCommand(authpkg.LoginCmd)
+	authCmd.AddCommand(authpkg.LogoutCmd)
+	authCmd.AddCommand(authpkg.StatusCmd)
 }
 
 func authHelp() {

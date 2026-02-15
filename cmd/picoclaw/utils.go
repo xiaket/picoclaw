@@ -13,12 +13,13 @@ import (
 )
 
 var (
-	version    = "dev"
-	gitCommit  string
-	buildTime  string
-	goVersion  string
-	logo       = "🦞"
+	version   = "dev"
+	gitCommit string
+	buildTime string
+	goVersion string
 )
+
+const logo = "🦞"
 
 // formatVersion returns the version string with optional git commit
 func formatVersion() string {
