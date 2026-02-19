@@ -15,9 +15,6 @@ var skillsCmd = &cobra.Command{
 	Use:   "skills",
 	Short: "Manage skills",
 	Long:  `Manage skills installation and listing.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		skillsHelp()
-	},
 }
 
 func init() {
@@ -46,22 +43,4 @@ func init() {
 	skillsCmd.AddCommand(skillspkg.ListBuiltinCmd)
 	skillsCmd.AddCommand(skillspkg.SearchCmd)
 	skillsCmd.AddCommand(skillspkg.ShowCmd)
-}
-
-func skillsHelp() {
-	fmt.Println("\nSkills commands:")
-	fmt.Println("  list                    List installed skills")
-	fmt.Println("  install <repo>          Install skill from GitHub")
-	fmt.Println("  install-builtin          Install all builtin skills to workspace")
-	fmt.Println("  list-builtin             List available builtin skills")
-	fmt.Println("  remove <name>           Remove installed skill")
-	fmt.Println("  search                  Search available skills")
-	fmt.Println("  show <name>             Show skill details")
-	fmt.Println()
-	fmt.Println("Examples:")
-	fmt.Println("  picoclaw skills list")
-	fmt.Println("  picoclaw skills install sipeed/picoclaw-skills/weather")
-	fmt.Println("  picoclaw skills install-builtin")
-	fmt.Println("  picoclaw skills list-builtin")
-	fmt.Println("  picoclaw skills remove weather")
 }

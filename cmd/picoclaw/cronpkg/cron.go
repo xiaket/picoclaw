@@ -3,10 +3,12 @@
 
 package cronpkg
 
+import "path/filepath"
+
 var cronStorePath string
 
 func SetCronStorePath(workspace string) {
-	cronStorePath = workspace + "/cron/jobs.json"
+	cronStorePath = filepath.Join(workspace, "cron", "jobs.json")
 }
 
 func GetCronStorePath() string {
