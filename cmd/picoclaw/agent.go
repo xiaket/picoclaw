@@ -30,9 +30,9 @@ var agentCmd = &cobra.Command{
 }
 
 var (
-	agentDebug    bool
-	agentMessage  string
-	agentSession  string
+	agentDebug   bool
+	agentMessage string
+	agentSession string
 )
 
 func init() {

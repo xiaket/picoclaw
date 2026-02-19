@@ -33,13 +33,13 @@ var AddCmd = &cobra.Command{
 }
 
 var (
-	cronName      string
-	cronMessage   string
-	cronEvery     int64
-	cronCronExpr  string
-	cronDeliver   bool
-	cronTo        string
-	cronChannel   string
+	cronName     string
+	cronMessage  string
+	cronEvery    int64
+	cronCronExpr string
+	cronDeliver  bool
+	cronTo       string
+	cronChannel  string
 )
 
 func init() {
