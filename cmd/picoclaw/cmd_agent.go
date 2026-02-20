@@ -104,7 +104,6 @@ func interactiveMode(agentLoop *agent.AgentLoop, sessionKey string) {
 		InterruptPrompt: "^C",
 		EOFPrompt:       "exit",
 	})
-
 	if err != nil {
 		fmt.Printf("Error initializing readline: %v\n", err)
 		fmt.Println("Falling back to simple input mode...")

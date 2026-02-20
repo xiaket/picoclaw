@@ -319,7 +319,7 @@ func TestSaveConfig_FilePermissions(t *testing.T) {
 	}
 
 	perm := info.Mode().Perm()
-	if perm != 0600 {
+	if perm != 0o600 {
 		t.Errorf("config file has permission %04o, want 0600", perm)
 	}
 }

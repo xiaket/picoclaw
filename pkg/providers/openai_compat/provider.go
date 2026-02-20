@@ -15,15 +15,17 @@ import (
 	"github.com/sipeed/picoclaw/pkg/providers/protocoltypes"
 )
 
-type ToolCall = protocoltypes.ToolCall
-type FunctionCall = protocoltypes.FunctionCall
-type LLMResponse = protocoltypes.LLMResponse
-type UsageInfo = protocoltypes.UsageInfo
-type Message = protocoltypes.Message
-type ToolDefinition = protocoltypes.ToolDefinition
-type ToolFunctionDefinition = protocoltypes.ToolFunctionDefinition
-type ExtraContent = protocoltypes.ExtraContent
-type GoogleExtra = protocoltypes.GoogleExtra
+type (
+	ToolCall               = protocoltypes.ToolCall
+	FunctionCall           = protocoltypes.FunctionCall
+	LLMResponse            = protocoltypes.LLMResponse
+	UsageInfo              = protocoltypes.UsageInfo
+	Message                = protocoltypes.Message
+	ToolDefinition         = protocoltypes.ToolDefinition
+	ToolFunctionDefinition = protocoltypes.ToolFunctionDefinition
+	ExtraContent           = protocoltypes.ExtraContent
+	GoogleExtra            = protocoltypes.GoogleExtra
+)
 
 type Provider struct {
 	apiKey         string

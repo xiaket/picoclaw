@@ -53,7 +53,7 @@ func TestInstallSkillToolUnsafeSlug(t *testing.T) {
 func TestInstallSkillToolAlreadyExists(t *testing.T) {
 	workspace := t.TempDir()
 	skillDir := filepath.Join(workspace, "skills", "existing-skill")
-	require.NoError(t, os.MkdirAll(skillDir, 0755))
+	require.NoError(t, os.MkdirAll(skillDir, 0o755))
 
 	tool := NewInstallSkillTool(skills.NewRegistryManager(), workspace)
 	result := tool.Execute(context.Background(), map[string]interface{}{

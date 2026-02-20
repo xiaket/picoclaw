@@ -331,7 +331,7 @@ func (cs *CronService) loadStore() error {
 
 func (cs *CronService) saveStoreUnsafe() error {
 	dir := filepath.Dir(cs.storePath)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}
 
@@ -340,7 +340,7 @@ func (cs *CronService) saveStoreUnsafe() error {
 		return err
 	}
 
-	return os.WriteFile(cs.storePath, data, 0600)
+	return os.WriteFile(cs.storePath, data, 0o600)
 }
 
 func (cs *CronService) AddJob(name string, schedule CronSchedule, message string, deliver bool, channel, to string) (*CronJob, error) {

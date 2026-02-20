@@ -17,7 +17,6 @@ type GitHubCopilotProvider struct {
 }
 
 func NewGitHubCopilotProvider(uri string, connectMode string, model string) (*GitHubCopilotProvider, error) {
-
 	var session *copilot.Session
 	if connectMode == "" {
 		connectMode = "grpc"
@@ -25,7 +24,7 @@ func NewGitHubCopilotProvider(uri string, connectMode string, model string) (*Gi
 	switch connectMode {
 
 	case "stdio":
-		//todo
+		// todo
 	case "grpc":
 		client := copilot.NewClient(&copilot.ClientOptions{
 			CLIUrl: uri,
@@ -73,10 +72,8 @@ func (p *GitHubCopilotProvider) Chat(ctx context.Context, messages []Message, to
 		FinishReason: "stop",
 		Content:      content,
 	}, nil
-
 }
 
 func (p *GitHubCopilotProvider) GetDefaultModel() string {
-
 	return "gpt-4.1"
 }

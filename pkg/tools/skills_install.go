@@ -108,7 +108,7 @@ func (t *InstallSkillTool) Execute(ctx context.Context, args map[string]interfac
 	}
 
 	// Ensure skills directory exists.
-	if err := os.MkdirAll(skillsDir, 0755); err != nil {
+	if err := os.MkdirAll(skillsDir, 0o755); err != nil {
 		return ErrorResult(fmt.Sprintf("failed to create skills directory: %v", err))
 	}
 
@@ -195,5 +195,5 @@ func writeOriginMeta(targetDir, registryName, slug, version string) error {
 		return err
 	}
 
-	return os.WriteFile(filepath.Join(targetDir, ".skill-origin.json"), data, 0644)
+	return os.WriteFile(filepath.Join(targetDir, ".skill-origin.json"), data, 0o644)
 }

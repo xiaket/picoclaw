@@ -28,7 +28,7 @@ func ExtractZipFile(zipPath string, targetDir string) error {
 		"entries":    len(reader.File),
 	})
 
-	if err := os.MkdirAll(targetDir, 0755); err != nil {
+	if err := os.MkdirAll(targetDir, 0o755); err != nil {
 		return fmt.Errorf("failed to create target dir: %w", err)
 	}
 
@@ -55,14 +55,14 @@ func ExtractZipFile(zipPath string, targetDir string) error {
 		}
 
 		if f.FileInfo().IsDir() {
-			if err := os.MkdirAll(destPath, 0755); err != nil {
+			if err := os.MkdirAll(destPath, 0o755); err != nil {
 				return err
 			}
 			continue
 		}
 
 		// Ensure parent directory exists.
-		if err := os.MkdirAll(filepath.Dir(destPath), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(destPath), 0o755); err != nil {
 			return err
 		}
 

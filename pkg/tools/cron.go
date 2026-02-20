@@ -320,7 +320,6 @@ func (t *CronTool) ExecuteJob(ctx context.Context, job *cron.CronJob) string {
 		channel,
 		chatID,
 	)
-
 	if err != nil {
 		return fmt.Sprintf("Error: %v", err)
 	}

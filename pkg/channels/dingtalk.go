@@ -192,7 +192,6 @@ func (c *DingTalkChannel) SendDirectReply(ctx context.Context, sessionWebhook, c
 		titleBytes,
 		contentBytes,
 	)
-
 	if err != nil {
 		return fmt.Errorf("failed to send reply: %w", err)
 	}

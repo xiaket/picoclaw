@@ -140,6 +140,7 @@ func (c *TelegramChannel) Start(ctx context.Context) error {
 
 	return nil
 }
+
 func (c *TelegramChannel) Stop(ctx context.Context) error {
 	logger.InfoC("telegram", "Stopping Telegram bot...")
 	c.setRunning(false)

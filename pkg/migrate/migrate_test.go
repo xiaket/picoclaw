@@ -108,7 +108,7 @@ func TestLoadOpenClawConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(configPath, data, 0644); err != nil {
+	if err := os.WriteFile(configPath, data, 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -389,9 +389,9 @@ func TestPlanWorkspaceMigration(t *testing.T) {
 		srcDir := t.TempDir()
 		dstDir := t.TempDir()
 
-		os.WriteFile(filepath.Join(srcDir, "AGENTS.md"), []byte("# Agents"), 0644)
-		os.WriteFile(filepath.Join(srcDir, "SOUL.md"), []byte("# Soul"), 0644)
-		os.WriteFile(filepath.Join(srcDir, "USER.md"), []byte("# User"), 0644)
+		os.WriteFile(filepath.Join(srcDir, "AGENTS.md"), []byte("# Agents"), 0o644)
+		os.WriteFile(filepath.Join(srcDir, "SOUL.md"), []byte("# Soul"), 0o644)
+		os.WriteFile(filepath.Join(srcDir, "USER.md"), []byte("# User"), 0o644)
 
 		actions, err := PlanWorkspaceMigration(srcDir, dstDir, false)
 		if err != nil {
@@ -420,8 +420,8 @@ func TestPlanWorkspaceMigration(t *testing.T) {
 		srcDir := t.TempDir()
 		dstDir := t.TempDir()
 
-		os.WriteFile(filepath.Join(srcDir, "AGENTS.md"), []byte("# Agents from OpenClaw"), 0644)
-		os.WriteFile(filepath.Join(dstDir, "AGENTS.md"), []byte("# Existing Agents"), 0644)
+		os.WriteFile(filepath.Join(srcDir, "AGENTS.md"), []byte("# Agents from OpenClaw"), 0o644)
+		os.WriteFile(filepath.Join(dstDir, "AGENTS.md"), []byte("# Existing Agents"), 0o644)
 
 		actions, err := PlanWorkspaceMigration(srcDir, dstDir, false)
 		if err != nil {
@@ -443,8 +443,8 @@ func TestPlanWorkspaceMigration(t *testing.T) {
 		srcDir := t.TempDir()
 		dstDir := t.TempDir()
 
-		os.WriteFile(filepath.Join(srcDir, "AGENTS.md"), []byte("# Agents"), 0644)
-		os.WriteFile(filepath.Join(dstDir, "AGENTS.md"), []byte("# Existing"), 0644)
+		os.WriteFile(filepath.Join(srcDir, "AGENTS.md"), []byte("# Agents"), 0o644)
+		os.WriteFile(filepath.Join(dstDir, "AGENTS.md"), []byte("# Existing"), 0o644)
 
 		actions, err := PlanWorkspaceMigration(srcDir, dstDir, true)
 		if err != nil {
@@ -463,8 +463,8 @@ func TestPlanWorkspaceMigration(t *testing.T) {
 		dstDir := t.TempDir()
 
 		memDir := filepath.Join(srcDir, "memory")
-		os.MkdirAll(memDir, 0755)
-		os.WriteFile(filepath.Join(memDir, "MEMORY.md"), []byte("# Memory"), 0644)
+		os.MkdirAll(memDir, 0o755)
+		os.WriteFile(filepath.Join(memDir, "MEMORY.md"), []byte("# Memory"), 0o644)
 
 		actions, err := PlanWorkspaceMigration(srcDir, dstDir, false)
 		if err != nil {
@@ -494,8 +494,8 @@ func TestPlanWorkspaceMigration(t *testing.T) {
 		dstDir := t.TempDir()
 
 		skillDir := filepath.Join(srcDir, "skills", "weather")
-		os.MkdirAll(skillDir, 0755)
-		os.WriteFile(filepath.Join(skillDir, "SKILL.md"), []byte("# Weather"), 0644)
+		os.MkdirAll(skillDir, 0o755)
+		os.WriteFile(filepath.Join(skillDir, "SKILL.md"), []byte("# Weather"), 0o644)
 
 		actions, err := PlanWorkspaceMigration(srcDir, dstDir, false)
 		if err != nil {
@@ -518,7 +518,7 @@ func TestFindOpenClawConfig(t *testing.T) {
 	t.Run("finds openclaw.json", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		configPath := filepath.Join(tmpDir, "openclaw.json")
-		os.WriteFile(configPath, []byte("{}"), 0644)
+		os.WriteFile(configPath, []byte("{}"), 0o644)
 
 		found, err := findOpenClawConfig(tmpDir)
 		if err != nil {
@@ -532,7 +532,7 @@ func TestFindOpenClawConfig(t *testing.T) {
 	t.Run("falls back to config.json", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		configPath := filepath.Join(tmpDir, "config.json")
-		os.WriteFile(configPath, []byte("{}"), 0644)
+		os.WriteFile(configPath, []byte("{}"), 0o644)
 
 		found, err := findOpenClawConfig(tmpDir)
 		if err != nil {
@@ -546,8 +546,8 @@ func TestFindOpenClawConfig(t *testing.T) {
 	t.Run("prefers openclaw.json over config.json", func(t *testing.T) {
 		tmpDir := t.TempDir()
 		openclawPath := filepath.Join(tmpDir, "openclaw.json")
-		os.WriteFile(openclawPath, []byte("{}"), 0644)
-		os.WriteFile(filepath.Join(tmpDir, "config.json"), []byte("{}"), 0644)
+		os.WriteFile(openclawPath, []byte("{}"), 0o644)
+		os.WriteFile(filepath.Join(tmpDir, "config.json"), []byte("{}"), 0o644)
 
 		found, err := findOpenClawConfig(tmpDir)
 		if err != nil {
@@ -593,9 +593,9 @@ func TestRunDryRun(t *testing.T) {
 	picoClawHome := t.TempDir()
 
 	wsDir := filepath.Join(openclawHome, "workspace")
-	os.MkdirAll(wsDir, 0755)
-	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul"), 0644)
-	os.WriteFile(filepath.Join(wsDir, "AGENTS.md"), []byte("# Agents"), 0644)
+	os.MkdirAll(wsDir, 0o755)
+	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul"), 0o644)
+	os.WriteFile(filepath.Join(wsDir, "AGENTS.md"), []byte("# Agents"), 0o644)
 
 	configData := map[string]interface{}{
 		"providers": map[string]interface{}{
@@ -605,7 +605,7 @@ func TestRunDryRun(t *testing.T) {
 		},
 	}
 	data, _ := json.Marshal(configData)
-	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0644)
+	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0o644)
 
 	opts := Options{
 		DryRun:       true,
@@ -634,14 +634,14 @@ func TestRunFullMigration(t *testing.T) {
 	picoClawHome := t.TempDir()
 
 	wsDir := filepath.Join(openclawHome, "workspace")
-	os.MkdirAll(wsDir, 0755)
-	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul from OpenClaw"), 0644)
-	os.WriteFile(filepath.Join(wsDir, "AGENTS.md"), []byte("# Agents from OpenClaw"), 0644)
-	os.WriteFile(filepath.Join(wsDir, "USER.md"), []byte("# User from OpenClaw"), 0644)
+	os.MkdirAll(wsDir, 0o755)
+	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul from OpenClaw"), 0o644)
+	os.WriteFile(filepath.Join(wsDir, "AGENTS.md"), []byte("# Agents from OpenClaw"), 0o644)
+	os.WriteFile(filepath.Join(wsDir, "USER.md"), []byte("# User from OpenClaw"), 0o644)
 
 	memDir := filepath.Join(wsDir, "memory")
-	os.MkdirAll(memDir, 0755)
-	os.WriteFile(filepath.Join(memDir, "MEMORY.md"), []byte("# Memory notes"), 0644)
+	os.MkdirAll(memDir, 0o755)
+	os.WriteFile(filepath.Join(memDir, "MEMORY.md"), []byte("# Memory notes"), 0o644)
 
 	configData := map[string]interface{}{
 		"providers": map[string]interface{}{
@@ -660,7 +660,7 @@ func TestRunFullMigration(t *testing.T) {
 		},
 	}
 	data, _ := json.Marshal(configData)
-	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0644)
+	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0o644)
 
 	opts := Options{
 		Force:        true,
@@ -754,7 +754,7 @@ func TestRunMutuallyExclusiveFlags(t *testing.T) {
 func TestBackupFile(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "test.md")
-	os.WriteFile(filePath, []byte("original content"), 0644)
+	os.WriteFile(filePath, []byte("original content"), 0o644)
 
 	if err := backupFile(filePath); err != nil {
 		t.Fatalf("backupFile: %v", err)
@@ -775,7 +775,7 @@ func TestCopyFile(t *testing.T) {
 	srcPath := filepath.Join(tmpDir, "src.md")
 	dstPath := filepath.Join(tmpDir, "dst.md")
 
-	os.WriteFile(srcPath, []byte("file content"), 0644)
+	os.WriteFile(srcPath, []byte("file content"), 0o644)
 
 	if err := copyFile(srcPath, dstPath); err != nil {
 		t.Fatalf("copyFile: %v", err)
@@ -795,8 +795,8 @@ func TestRunConfigOnly(t *testing.T) {
 	picoClawHome := t.TempDir()
 
 	wsDir := filepath.Join(openclawHome, "workspace")
-	os.MkdirAll(wsDir, 0755)
-	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul"), 0644)
+	os.MkdirAll(wsDir, 0o755)
+	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul"), 0o644)
 
 	configData := map[string]interface{}{
 		"providers": map[string]interface{}{
@@ -806,7 +806,7 @@ func TestRunConfigOnly(t *testing.T) {
 		},
 	}
 	data, _ := json.Marshal(configData)
-	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0644)
+	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0o644)
 
 	opts := Options{
 		Force:        true,
@@ -835,8 +835,8 @@ func TestRunWorkspaceOnly(t *testing.T) {
 	picoClawHome := t.TempDir()
 
 	wsDir := filepath.Join(openclawHome, "workspace")
-	os.MkdirAll(wsDir, 0755)
-	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul"), 0644)
+	os.MkdirAll(wsDir, 0o755)
+	os.WriteFile(filepath.Join(wsDir, "SOUL.md"), []byte("# Soul"), 0o644)
 
 	configData := map[string]interface{}{
 		"providers": map[string]interface{}{
@@ -846,7 +846,7 @@ func TestRunWorkspaceOnly(t *testing.T) {
 		},
 	}
 	data, _ := json.Marshal(configData)
-	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0644)
+	os.WriteFile(filepath.Join(openclawHome, "openclaw.json"), data, 0o644)
 
 	opts := Options{
 		Force:         true,

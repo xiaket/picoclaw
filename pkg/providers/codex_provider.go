@@ -14,8 +14,10 @@ import (
 	"github.com/sipeed/picoclaw/pkg/logger"
 )
 
-const codexDefaultModel = "gpt-5.2"
-const codexDefaultInstructions = "You are Codex, a coding assistant."
+const (
+	codexDefaultModel        = "gpt-5.2"
+	codexDefaultInstructions = "You are Codex, a coding assistant."
+)
 
 type CodexProvider struct {
 	client          *openai.Client

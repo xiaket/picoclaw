@@ -65,7 +65,7 @@ func DownloadFile(url, filename string, opts DownloadOptions) string {
 	}
 
 	mediaDir := filepath.Join(os.TempDir(), "picoclaw_media")
-	if err := os.MkdirAll(mediaDir, 0700); err != nil {
+	if err := os.MkdirAll(mediaDir, 0o700); err != nil {
 		logger.ErrorCF(opts.LoggerPrefix, "Failed to create media directory", map[string]interface{}{
 			"error": err.Error(),
 		})
