@@ -6,6 +6,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -68,10 +69,10 @@ func runAgent(cmd *cobra.Command, args []string) error {
 
 	startupInfo := agentLoop.GetStartupInfo()
 	logger.InfoCF("agent", "Agent initialized",
-		map[string]interface{}{
-			"tools_count":      startupInfo["tools"].(map[string]interface{})["count"],
-			"skills_total":     startupInfo["skills"].(map[string]interface{})["total"],
-			"skills_available": startupInfo["skills"].(map[string]interface{})["available"],
+		map[string]any{
+			"tools_count":      startupInfo["tools"].(map[string]any)["count"],
+			"skills_total":     startupInfo["skills"].(map[string]any)["total"],
+			"skills_available": startupInfo["skills"].(map[string]any)["available"],
 		})
 
 	if message != "" {
@@ -111,7 +112,7 @@ func interactiveMode(agentLoop *agent.AgentLoop, sessionKey string) {
 	for {
 		line, err := rl.Readline()
 		if err != nil {
-			if err == readline.ErrInterrupt || err == io.EOF {
+			if errors.Is(err, readline.ErrInterrupt) || errors.Is(err, io.EOF) {
 				fmt.Println("\nGoodbye!")
 				return
 			}

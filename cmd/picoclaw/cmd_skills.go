@@ -70,15 +70,16 @@ func newSkillsCmd() *cobra.Command {
 
 func newSkillsListCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "list",
-		Short: "List installed skills",
-		RunE:  runSkillsList,
+		Use:     "list",
+		Short:   "List installed skills",
+		Example: `picoclaw skills list`,
+		RunE:    runSkillsList,
 	}
 }
 
 func newSkillsInstallCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "install <repo>",
+		Use:   "install",
 		Short: "Install skill from GitHub",
 		Example: `  picoclaw skills install sipeed/picoclaw-skills/weather
   picoclaw skills install --registry clawhub github`,
@@ -92,8 +93,8 @@ func newSkillsInstallCmd() *cobra.Command {
 
 func newSkillsRemoveCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:     "remove <name>",
-		Aliases: []string{"uninstall"},
+		Use:     "remove",
+		Aliases: []string{"uninstall", "rm"},
 		Short:   "Remove installed skill",
 		Example: `  picoclaw skills remove weather
   picoclaw skills uninstall weather`,
@@ -130,15 +131,17 @@ func newSkillsSearchCmd() *cobra.Command {
 
 func newSkillsShowCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:     "show <name>",
+		Use:     "show",
 		Short:   "Show skill details",
 		Example: `  picoclaw skills show weather`,
 		Args:    cobra.ExactArgs(1),
-		RunE:    runSkillsShow,
+		RunE: func(_ *cobra.Command, args []string) error {
+			return runSkillsShow(args[0])
+		},
 	}
 }
 
-func runSkillsList(cmd *cobra.Command, args []string) error {
+func runSkillsList(_ *cobra.Command, _ []string) error {
 	sc, err := loadSkillsContext()
 	if err != nil {
 		fmt.Println(err)
@@ -276,7 +279,7 @@ func skillsInstallFromRegistry(cfg *config.Config, registryName, slug string) er
 	return nil
 }
 
-func runSkillsRemove(cmd *cobra.Command, args []string) error {
+func runSkillsRemove(_ *cobra.Command, args []string) error {
 	sc, err := loadSkillsContext()
 	if err != nil {
 		fmt.Println(err)
@@ -295,7 +298,7 @@ func runSkillsRemove(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runSkillsInstallBuiltin(cmd *cobra.Command, args []string) error {
+func runSkillsInstallBuiltin(_ *cobra.Command, _ []string) error {
 	sc, err := loadSkillsContext()
 	if err != nil {
 		fmt.Println(err)
@@ -338,7 +341,7 @@ func runSkillsInstallBuiltin(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runSkillsListBuiltin(cmd *cobra.Command, args []string) error {
+func runSkillsListBuiltin(_ *cobra.Command, _ []string) error {
 	cfg, err := loadConfig()
 	if err != nil {
 		fmt.Printf("Error loading config: %v\n", err)
@@ -391,7 +394,7 @@ func runSkillsListBuiltin(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runSkillsSearch(cmd *cobra.Command, args []string) error {
+func runSkillsSearch(_ *cobra.Command, _ []string) error {
 	sc, err := loadSkillsContext()
 	if err != nil {
 		fmt.Println(err)
@@ -431,14 +434,13 @@ func runSkillsSearch(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runSkillsShow(cmd *cobra.Command, args []string) error {
+func runSkillsShow(skillName string) error {
 	sc, err := loadSkillsContext()
 	if err != nil {
 		fmt.Println(err)
 		return nil
 	}
 
-	skillName := args[0]
 	content, ok := sc.loader.LoadSkill(skillName)
 	if !ok {
 		fmt.Printf("✗ Skill '%s' not found\n", skillName)

@@ -15,10 +15,7 @@ func newMigrateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "migrate",
 		Short: "Migrate from OpenClaw to PicoClaw",
-		Long: `Migrate from OpenClaw to PicoClaw
-
-Examples:
-  picoclaw migrate
+		Example: `  picoclaw migrate
   picoclaw migrate --dry-run
   picoclaw migrate --refresh
   picoclaw migrate --force`,
@@ -34,7 +31,7 @@ Examples:
 	return cmd
 }
 
-func runMigrate(cmd *cobra.Command, args []string) error {
+func runMigrate(cmd *cobra.Command, _ []string) error {
 	opts := migrate.Options{}
 	opts.DryRun, _ = cmd.Flags().GetBool("dry-run")
 	opts.ConfigOnly, _ = cmd.Flags().GetBool("config-only")

@@ -26,7 +26,7 @@ func newOnboardCmd() *cobra.Command {
 	}
 }
 
-func runOnboard(cmd *cobra.Command, args []string) error {
+func runOnboard(_ *cobra.Command, _ []string) error {
 	configPath := getConfigPath()
 
 	if _, err := os.Stat(configPath); err == nil {
@@ -60,6 +60,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 	fmt.Println("     See README.md for 17+ supported providers.")
 	fmt.Println("")
 	fmt.Println("  2. Chat: picoclaw agent -m \"Hello!\"")
+
 	return nil
 }
 

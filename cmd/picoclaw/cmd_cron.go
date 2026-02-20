@@ -13,33 +13,47 @@ import (
 )
 
 func newCronCmd() *cobra.Command {
+	var storePath string
+
 	cmd := &cobra.Command{
 		Use:   "cron",
 		Short: "Manage scheduled tasks",
+		PersistentPreRunE: func(_ *cobra.Command, _ []string) error {
+			s, err := getCronStorePath()
+			if err != nil {
+				return err
+			}
+			storePath = s
+			return nil
+		},
 	}
 	cmd.AddCommand(
-		newCronListCmd(),
-		newCronAddCmd(),
-		newCronRemoveCmd(),
-		newCronEnableCmd(),
-		newCronDisableCmd(),
+		newCronListCmd(storePath),
+		newCronAddCmd(storePath),
+		newCronRemoveCmd(storePath),
+		newCronEnableCmd(storePath),
+		newCronDisableCmd(storePath),
 	)
 	return cmd
 }
 
-func newCronListCmd() *cobra.Command {
+func newCronListCmd(storePath string) *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
 		Short: "List all scheduled jobs",
-		RunE:  runCronList,
+		RunE: func(_ *cobra.Command, _ []string) error {
+			return runCronList(storePath)
+		},
 	}
 }
 
-func newCronAddCmd() *cobra.Command {
+func newCronAddCmd(storePath string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add",
 		Short: "Add a new scheduled job",
-		RunE:  runCronAdd,
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return runCronAdd(cmd, storePath)
+		},
 	}
 	cmd.Flags().StringP("name", "n", "", "Job name")
 	cmd.MarkFlagRequired("name")
@@ -53,30 +67,39 @@ func newCronAddCmd() *cobra.Command {
 	return cmd
 }
 
-func newCronRemoveCmd() *cobra.Command {
+func newCronRemoveCmd(storePath string) *cobra.Command {
 	return &cobra.Command{
-		Use:   "remove <job_id>",
-		Short: "Remove a job by ID",
-		Args:  cobra.ExactArgs(1),
-		RunE:  runCronRemove,
+		Use:     "remove <job_id>",
+		Short:   "Remove a job by ID",
+		Example: `picoclaw cron remove 1`,
+		Args:    cobra.ExactArgs(1),
+		RunE: func(_ *cobra.Command, args []string) error {
+			return runCronRemove(args[0], storePath)
+		},
 	}
 }
 
-func newCronEnableCmd() *cobra.Command {
+func newCronEnableCmd(storePath string) *cobra.Command {
 	return &cobra.Command{
-		Use:   "enable <job_id>",
-		Short: "Enable a job",
-		Args:  cobra.ExactArgs(1),
-		RunE:  runCronEnable,
+		Use:     "enable",
+		Short:   "Enable a job",
+		Example: `picoclaw cron enable 1`,
+		Args:    cobra.ExactArgs(1),
+		RunE: func(_ *cobra.Command, args []string) error {
+			return runCronEnable(args[0], storePath)
+		},
 	}
 }
 
-func newCronDisableCmd() *cobra.Command {
+func newCronDisableCmd(storePath string) *cobra.Command {
 	return &cobra.Command{
-		Use:   "disable <job_id>",
-		Short: "Disable a job",
-		Args:  cobra.ExactArgs(1),
-		RunE:  runCronDisable,
+		Use:     "disable",
+		Short:   "Disable a job",
+		Example: `picoclaw cron disable 1`,
+		Args:    cobra.ExactArgs(1),
+		RunE: func(_ *cobra.Command, args []string) error {
+			return runCronDisable(args[0], storePath)
+		},
 	}
 }
 
@@ -88,13 +111,7 @@ func getCronStorePath() (string, error) {
 	return filepath.Join(cfg.WorkspacePath(), "cron", "jobs.json"), nil
 }
 
-func runCronList(cmd *cobra.Command, args []string) error {
-	storePath, err := getCronStorePath()
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
+func runCronList(storePath string) error {
 	cs := cron.NewCronService(storePath, nil)
 	jobs := cs.ListJobs(true)
 
@@ -131,16 +148,11 @@ func runCronList(cmd *cobra.Command, args []string) error {
 		fmt.Printf("    Status: %s\n", status)
 		fmt.Printf("    Next run: %s\n", nextRun)
 	}
+
 	return nil
 }
 
-func runCronAdd(cmd *cobra.Command, args []string) error {
-	storePath, err := getCronStorePath()
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
+func runCronAdd(cmd *cobra.Command, storePath string) error {
 	name, _ := cmd.Flags().GetString("name")
 	message, _ := cmd.Flags().GetString("message")
 	everySec, _ := cmd.Flags().GetInt64("every")
@@ -179,14 +191,7 @@ func runCronAdd(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runCronRemove(cmd *cobra.Command, args []string) error {
-	storePath, err := getCronStorePath()
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	jobID := args[0]
+func runCronRemove(jobID, storePath string) error {
 	cs := cron.NewCronService(storePath, nil)
 	if cs.RemoveJob(jobID) {
 		fmt.Printf("\u2713 Removed job %s\n", jobID)
@@ -196,14 +201,7 @@ func runCronRemove(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runCronEnable(cmd *cobra.Command, args []string) error {
-	storePath, err := getCronStorePath()
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	jobID := args[0]
+func runCronEnable(jobID, storePath string) error {
 	cs := cron.NewCronService(storePath, nil)
 	job := cs.EnableJob(jobID, true)
 	if job != nil {
@@ -214,14 +212,7 @@ func runCronEnable(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runCronDisable(cmd *cobra.Command, args []string) error {
-	storePath, err := getCronStorePath()
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	jobID := args[0]
+func runCronDisable(jobID, storePath string) error {
 	cs := cron.NewCronService(storePath, nil)
 	job := cs.EnableJob(jobID, false)
 	if job != nil {
