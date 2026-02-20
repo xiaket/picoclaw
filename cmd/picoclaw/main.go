@@ -93,14 +93,16 @@ func copyDirectory(src, dst string) error {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "picoclaw",
-	Short: fmt.Sprintf("%s picoclaw - Personal AI Assistant", logo),
+	Use:     "picoclaw",
+	Short:   fmt.Sprintf("%s picoclaw - Personal AI Assistant", logo),
+	Example: `picoclaw list`,
 }
 
 func newVersionCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "version",
-		Short: "Show version information",
+		Use:     "version",
+		Short:   "Show version information",
+		Aliases: []string{"v"},
 		Run: func(cmd *cobra.Command, args []string) {
 			printVersion()
 		},

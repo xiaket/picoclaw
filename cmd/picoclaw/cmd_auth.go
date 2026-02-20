@@ -24,10 +24,7 @@ func newAuthCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auth",
 		Short: "Manage authentication (login, logout, status)",
-		Long: `Manage authentication (login, logout, status)
-
-Examples:
-  picoclaw auth login --provider openai
+		Example: `picoclaw auth login --provider openai
   picoclaw auth login --provider openai --device-code
   picoclaw auth login --provider anthropic
   picoclaw auth login --provider google-antigravity
@@ -51,7 +48,7 @@ func newAuthLoginCmd() *cobra.Command {
 		RunE:  runAuthLogin,
 	}
 	cmd.Flags().StringP("provider", "p", "", "Provider (openai, anthropic, google-antigravity)")
-	cmd.MarkFlagRequired("provider")
+	_ = cmd.MarkFlagRequired("provider")
 	cmd.Flags().Bool("device-code", false, "Use device code flow (for headless environments)")
 	return cmd
 }
@@ -82,7 +79,7 @@ func newAuthModelsCmd() *cobra.Command {
 	}
 }
 
-func runAuthLogin(cmd *cobra.Command, args []string) error {
+func runAuthLogin(cmd *cobra.Command, _ []string) error {
 	provider, _ := cmd.Flags().GetString("provider")
 	useDeviceCode, _ := cmd.Flags().GetBool("device-code")
 
@@ -100,7 +97,7 @@ func runAuthLogin(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runAuthLogout(cmd *cobra.Command, args []string) error {
+func runAuthLogout(cmd *cobra.Command, _ []string) error {
 	provider, _ := cmd.Flags().GetString("provider")
 
 	if provider != "" {
@@ -161,7 +158,7 @@ func runAuthLogout(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runAuthStatus(cmd *cobra.Command, args []string) error {
+func runAuthStatus(_ *cobra.Command, _ []string) error {
 	store, err := auth.LoadStore()
 	if err != nil {
 		fmt.Printf("Error loading auth store: %v\n", err)
@@ -203,7 +200,7 @@ func runAuthStatus(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func runAuthModels(cmd *cobra.Command, args []string) error {
+func runAuthModels(_ *cobra.Command, _ []string) error {
 	cred, err := auth.GetCredential("google-antigravity")
 	if err != nil || cred == nil {
 		fmt.Println("Not logged in to Google Antigravity.")

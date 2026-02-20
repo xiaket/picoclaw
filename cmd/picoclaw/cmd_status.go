@@ -19,7 +19,7 @@ func newStatusCmd() *cobra.Command {
 	}
 }
 
-func runStatus(cmd *cobra.Command, args []string) error {
+func runStatus(_ *cobra.Command, _ []string) error {
 	cfg, err := loadConfig()
 	if err != nil {
 		fmt.Printf("Error loading config: %v\n", err)
@@ -30,10 +30,12 @@ func runStatus(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("%s picoclaw Status\n", logo)
 	fmt.Printf("Version: %s\n", formatVersion())
+
 	build, _ := formatBuildInfo()
 	if build != "" {
 		fmt.Printf("Build: %s\n", build)
 	}
+
 	fmt.Println()
 
 	if _, err := os.Stat(configPath); err == nil {
@@ -72,6 +74,7 @@ func runStatus(cmd *cobra.Command, args []string) error {
 			}
 			return "not set"
 		}
+
 		fmt.Println("OpenRouter API:", status(hasOpenRouter))
 		fmt.Println("Anthropic API:", status(hasAnthropic))
 		fmt.Println("OpenAI API:", status(hasOpenAI))
@@ -83,11 +86,13 @@ func runStatus(cmd *cobra.Command, args []string) error {
 		fmt.Println("DeepSeek API:", status(hasDeepSeek))
 		fmt.Println("VolcEngine API:", status(hasVolcEngine))
 		fmt.Println("Nvidia API:", status(hasNvidia))
+
 		if hasVLLM {
 			fmt.Printf("vLLM/Local: \u2713 %s\n", cfg.Providers.VLLM.APIBase)
 		} else {
 			fmt.Println("vLLM/Local: not set")
 		}
+
 		if hasOllama {
 			fmt.Printf("Ollama: \u2713 %s\n", cfg.Providers.Ollama.APIBase)
 		} else {

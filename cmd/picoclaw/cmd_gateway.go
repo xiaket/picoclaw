@@ -38,7 +38,7 @@ func newGatewayCmd() *cobra.Command {
 	return cmd
 }
 
-func runGateway(cmd *cobra.Command, args []string) error {
+func runGateway(cmd *cobra.Command, _ []string) error {
 	debug, _ := cmd.Flags().GetBool("debug")
 	if debug {
 		logger.SetLevel(logger.DEBUG)
@@ -65,15 +65,15 @@ func runGateway(cmd *cobra.Command, args []string) error {
 
 	fmt.Println("\n\U0001f4e6 Agent Status:")
 	startupInfo := agentLoop.GetStartupInfo()
-	toolsInfo := startupInfo["tools"].(map[string]interface{})
-	skillsInfo := startupInfo["skills"].(map[string]interface{})
+	toolsInfo := startupInfo["tools"].(map[string]any)
+	skillsInfo := startupInfo["skills"].(map[string]any)
 	fmt.Printf("  \u2022 Tools: %d loaded\n", toolsInfo["count"])
 	fmt.Printf("  \u2022 Skills: %d/%d available\n",
 		skillsInfo["available"],
 		skillsInfo["total"])
 
 	logger.InfoCF("agent", "Agent initialized",
-		map[string]interface{}{
+		map[string]any{
 			"tools_count":      toolsInfo["count"],
 			"skills_total":     skillsInfo["total"],
 			"skills_available": skillsInfo["available"],
@@ -179,7 +179,7 @@ func runGateway(cmd *cobra.Command, args []string) error {
 	healthServer := health.NewServer(cfg.Gateway.Host, cfg.Gateway.Port)
 	go func() {
 		if err := healthServer.Start(); err != nil && err != http.ErrServerClosed {
-			logger.ErrorCF("health", "Health server error", map[string]interface{}{"error": err.Error()})
+			logger.ErrorCF("health", "Health server error", map[string]any{"error": err.Error()})
 		}
 	}()
 	fmt.Printf("\u2713 Health endpoints available at http://%s:%d/health and /ready\n", cfg.Gateway.Host, cfg.Gateway.Port)
@@ -191,6 +191,7 @@ func runGateway(cmd *cobra.Command, args []string) error {
 	<-sigChan
 
 	fmt.Println("\nShutting down...")
+
 	cancel()
 	healthServer.Stop(context.Background())
 	deviceService.Stop()
@@ -198,11 +199,15 @@ func runGateway(cmd *cobra.Command, args []string) error {
 	cronService.Stop()
 	agentLoop.Stop()
 	channelManager.StopAll(ctx)
+
 	fmt.Println("\u2713 Gateway stopped")
+
 	return nil
 }
 
-func setupCronTool(agentLoop *agent.AgentLoop, msgBus *bus.MessageBus, workspace string, restrict bool, execTimeout time.Duration, cfg *config.Config) *cron.CronService {
+func setupCronTool(agentLoop *agent.AgentLoop, msgBus *bus.MessageBus, workspace string, restrict bool,
+	execTimeout time.Duration, cfg *config.Config) *cron.CronService {
+
 	cronStorePath := filepath.Join(workspace, "cron", "jobs.json")
 
 	cronService := cron.NewCronService(cronStorePath, nil)
