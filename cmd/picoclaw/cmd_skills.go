@@ -49,6 +49,12 @@ func newSkillsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "skills",
 		Short: "Manage skills (install, list, remove)",
+		Example: `  picoclaw skills list
+  picoclaw skills install sipeed/picoclaw-skills/weather
+  picoclaw skills install --registry clawhub github
+  picoclaw skills install-builtin
+  picoclaw skills list-builtin
+  picoclaw skills remove weather`,
 	}
 	cmd.AddCommand(
 		newSkillsListCmd(),
@@ -74,6 +80,8 @@ func newSkillsInstallCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "install <repo>",
 		Short: "Install skill from GitHub",
+		Example: `  picoclaw skills install sipeed/picoclaw-skills/weather
+  picoclaw skills install --registry clawhub github`,
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  runSkillsInstall,
 	}
@@ -87,6 +95,8 @@ func newSkillsRemoveCmd() *cobra.Command {
 		Use:     "remove <name>",
 		Aliases: []string{"uninstall"},
 		Short:   "Remove installed skill",
+		Example: `  picoclaw skills remove weather
+  picoclaw skills uninstall weather`,
 		Args:    cobra.ExactArgs(1),
 		RunE:    runSkillsRemove,
 	}
@@ -96,6 +106,7 @@ func newSkillsInstallBuiltinCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "install-builtin",
 		Short: "Install all builtin skills to workspace",
+		Example: `  picoclaw skills install-builtin`,
 		RunE:  runSkillsInstallBuiltin,
 	}
 }
@@ -104,6 +115,7 @@ func newSkillsListBuiltinCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list-builtin",
 		Short: "List available builtin skills",
+		Example: `  picoclaw skills list-builtin`,
 		RunE:  runSkillsListBuiltin,
 	}
 }
@@ -120,6 +132,7 @@ func newSkillsShowCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "show <name>",
 		Short: "Show skill details",
+		Example: `  picoclaw skills show weather`,
 		Args:  cobra.ExactArgs(1),
 		RunE:  runSkillsShow,
 	}
@@ -160,16 +173,21 @@ func runSkillsInstall(cmd *cobra.Command, args []string) error {
 	// Check for --registry flag
 	registry, _ := cmd.Flags().GetString("registry")
 	if registry != "" {
-		if len(args) < 2 {
+		if len(args) < 1 {
 			fmt.Println("Usage: picoclaw skills install --registry <name> <slug>")
 			fmt.Println("Example: picoclaw skills install --registry clawhub github")
 			return nil
 		}
-		slug := args[1]
+		slug := args[0]
 		return skillsInstallFromRegistry(sc.cfg, registry, slug)
 	}
 
 	// Default: install from GitHub
+	if len(args) < 1 {
+		fmt.Println("Usage: picoclaw skills install <github-repo>")
+		fmt.Println("       picoclaw skills install --registry <name> <slug>")
+		return nil
+	}
 	repo := args[0]
 	fmt.Printf("Installing skill from %s...\n", repo)
 
